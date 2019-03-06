@@ -1,11 +1,21 @@
-FROM Alpine Linux v3.9
-MAINTAINER Docker Education Team <education@docker.com>
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q python-all python-pip 
-ADD ./webapp/requirements.txt /tmp/requirements.txt
-RUN pip install -qr /tmp/requirements.txt
-ADD ./webapp /opt/webapp/
-WORKDIR /opt/webapp
-EXPOSE 5000
+# Use an official Python runtime as a parent image
+FROM python:2.7-slim
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
+
+# Make port 80 available to the world outside this container
+EXPOSE 80
+
+# Define environment variable
+ENV NAME World
+
+# Run app.py when the container launches
 CMD ["python", "app.py"]
 
